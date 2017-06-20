@@ -14,9 +14,8 @@ def transfer_money(user_token, event, attributes):
     invocation = event['invocationSource']
     intent_name = intent['name']
     slots = intent['slots']
-    if not attributes:
-        # no attributes, let's fetch some info from Citi
-        accounts = citi.retrieve_dest_src_acct(user_token)
+    # let's fetch some account info from Citi
+    accounts = citi.retrieve_dest_src_acct(user_token)
 
     if invocation == 'DialogCodeHook':
         validation_result = validate_transfer(slots, attributes, accounts)
@@ -94,6 +93,9 @@ def validate_transfer(slots, attributes, accounts):
                 'destination',
                 "Which account to transfer to?\n" + destinations
         )
+
+    if attributes is None:
+        attributes = []
     attributes['destination_account_id'] = dest['destinationAccountId']
     attributes['destination_name'] = dest['productName']
     dest_id = dest['destinationAccountId']
