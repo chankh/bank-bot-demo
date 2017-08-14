@@ -7,10 +7,10 @@ import shutil
 import stat
 import subprocess
 
-page_id = "833374250162294"
-page_token = "EAAGbZB0OBi7EBAOXOU0jZBoGfpem22Pm4RTL8CxSVSYevXCf9P0ZBgmLs0uLbcN2mGIiYqakOXN74Vrx51oTXwM7o9mTwSVJ08NZCk9RJpnae84Bac1TxoTjBLOvn6Nxsw9AMPpKvx9gXxgIZAukbpDxZCsryG8dav8cNmwstZBmQZDZD"
+page_id = os.getenv('PAGE_ID')
+page_token = os.getenv('PAGE_TOKEN')
 
-citi_auth_url = "https://sandbox.apihub.citi.com/gcb/api/authCode/oauth2/authorize?response_type=code&client_id=d738097c-6eea-4e5b-a1f2-35d816a65f07&scope=accounts_details_transactions%20customers_profiles%20payees%20personal_domestic_transfers%20internal_domestic_transfers%20external_domestic_transfers%20bill_payments&countryCode=HK&businessCode=GCB&locale=en_HK&redirect_uri=https://npkpenmw49.execute-api.us-east-1.amazonaws.com/v1/redirect&state="
+citi_auth_url = os.getenv('CITI_AUTH_URL')
 
 lex = boto3.client('lex-runtime')
 logger = logging.getLogger()

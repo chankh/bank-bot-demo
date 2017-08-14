@@ -1,8 +1,9 @@
 import boto3
+import os
 import requests
 
-page_id = "833374250162294"
-page_token = "EAAGbZB0OBi7EBAOXOU0jZBoGfpem22Pm4RTL8CxSVSYevXCf9P0ZBgmLs0uLbcN2mGIiYqakOXN74Vrx51oTXwM7o9mTwSVJ08NZCk9RJpnae84Bac1TxoTjBLOvn6Nxsw9AMPpKvx9gXxgIZAukbpDxZCsryG8dav8cNmwstZBmQZDZD"
+page_id = os.getenv('PAGE_ID')
+page_token = os.getenv('PAGE_TOKEN')
 
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
 table = dynamodb.Table('citi-demo')
@@ -18,7 +19,8 @@ def lambda_handler(event, context):
             user_id = str(record['dynamodb']['Keys']['user_id']['S'])
             item = table.get_item(Key={'user_id': user_id})
             name = item['Item']['name']
-            welcome(user_id, "Hello %s, how may I help you?" % name['firstName'])
+            msg = "Hello %s, how are you? You can ask to show your account summary or make a transfer" % name['firstName']
+            welcome(user_id, msg)
 
     return 'Successfully processed {} records.'.format(len(event['Records']))
 

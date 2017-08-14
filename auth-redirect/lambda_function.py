@@ -1,5 +1,6 @@
 import boto3
 import logging
+import os
 import requests
 import time
 import uuid
@@ -19,8 +20,8 @@ requests_log.propagate = True
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
 table = dynamodb.Table('citi-demo')
 
-client_id = "d738097c-6eea-4e5b-a1f2-35d816a65f07"
-client_secret = "sX7jA5aF7hE7fC7oK1qX1aG1iH0kM8xN0mS2kN5mF0mF7lN0qT"
+client_id = os.getenv('CLIENT_ID')
+client_secret = os.getenv('CLIENT_SECRET')
 
 
 def lambda_handler(event, context):
