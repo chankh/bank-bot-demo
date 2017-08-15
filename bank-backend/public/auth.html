@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Auth</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+      <div class="jumbotron">
+        <form action="/auth" method="POST">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 col-main">
+                <div class="centerBlock">
+                  <div class="customPanel">
+                    <div class="panel panel-default mainPanel">
+                      <div class="spacer4">
+                        <div class="panel-body customPanel-body">
+                          <div id="subapp-auth-registration">
+                            <div data-screen="setup">
+                              <div id="RegForm1" class="theme-light">
+                                <div class="row marginTopResource">
+                                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-custom-padding">
+                                    <div class="col-md-8 col-md-offset-2">
+                                      <div class="row nomargin">
+                                        <div class="title text-center spacerTop">
+                                          <h2>BankBot would like access to your Bank Account to:</h2>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row nomargin">
+                                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-custom-padding">
+                                    <div class="col-md-8 col-md-offset-2">
+                                      <div id="ScopeList" class="row marginTopResource">
+                                        <label>
+                                          <ul>
+                                            <li class="resourceFont">
+                                              Retrieve a summary of all accounts,account details and transactions</li>
+                                          </ul>
+                                        </label>
+                                        <label>
+                                          <ul>
+                                            <li class="resourceFont">
+                                              Retrieve profile data such as name,email address,home address</li>
+                                          </ul>
+                                        </label>
+                                        <label>
+                                          <ul>
+                                            <li class="resourceFont">
+                                              Retrieve payees/source accounts for all accounts</li>
+                                          </ul>
+                                        </label>
+                                        <label>
+                                          <ul>
+                                            <li class="resourceFont">
+                                              Retrieve payees/source accounts and complete transfers between your own Citi accounts in the same market</li>
+                                          </ul>
+                                        </label>
+                                        <label>
+                                          <ul>
+                                            <li class="resourceFont">
+                                              Retrieve payees/source accounts and complete transfers from your Citi accounts to other customer Citi accounts in the same market</li>
+                                          </ul>
+                                        </label>
+                                        <label>
+                                          <ul>
+                                            <li class="resourceFont">
+                                              Retrieve payees/source accounts and complete transfers from your Citi accounts to other bank accounts in the same market.</li>
+                                          </ul>
+                                        </label>
+                                        <label>
+                                          <ul>
+                                            <li class="resourceFont">
+                                              Retrieve bill payees and complete bill payments</li>
+                                          </ul>
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <input type="hidden" name="approve" value="true" id="scope_approve">
+                                <div class="row nomargin">
+                                  <div id="submit_root">
+                                    <div class="text-center">
+                                      <div class="col-md-10 col-sm-10 col-xs-10 col-xs-offset-1 marginTopResource">
+                                        <input id="submit_login" type="submit" value="Authorize" class="btn btn-primary">
+                                        <input id="submit_cancel" type="button" value="Cancel" class="btn btn-primary btn-cancel">
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+</body>
+
+</html>
