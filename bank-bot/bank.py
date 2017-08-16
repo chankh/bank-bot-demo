@@ -49,7 +49,9 @@ def retrieve_dest_src_acct(token):
         logger.error("Unable to get account summary, status={}, error={}".format(r.status_code, r.text))
         return None
 
-    return r.json()
+    resp = r.json()
+    logger.debug(resp)
+    return resp
 
 
 def create_transfer(token, source_account_id, amount, destination_account_id):
