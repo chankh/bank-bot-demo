@@ -2,19 +2,10 @@ version: 0.1
 phases:
     build:
         commands:
-            - cd auth-redirect
-            - pip install -r requirements.txt
-            - zip -r ../auth-redirect.zip .
-            - cd ../auth-welcome
-            - pip install -r requirements.txt
-            - zip -r ../auth-welcome.zip .
-            - cd ../bank-bot
-            - pip install -r requirements.txt
-            - zip -r ../bank-bot.zip .
-            - cd ../facebook-webhook
-            - pip install -r requirements.txt
-            - zip -r ../facebook-webhook.zip .
-            - cd ..
+            - cd auth-redirect && pip install -r requirements.txt && zip -r ../auth-redirect.zip . && cd ..
+            - cd auth-welcome && pip install -r requirements.txt && zip -r ../auth-welcome.zip . && cd ..
+            - cd bank-bot && pip install -r requirements.txt && zip -r ../bank-bot.zip . && cd ..
+            - cd facebook-webhook && pip install -r requirements.txt && zip -r ../facebook-webhook.zip . && cd ..
     post_build:
         commands:
             - aws s3 cp *.zip s3://khk-aws/demos/bank-bot-demo/
