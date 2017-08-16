@@ -1,8 +1,10 @@
 import boto3
 import logging
+import os
 import time
 
-dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+region = os.geten('REGION')
+dynamodb = boto3.resource('dynamodb', region_name=region)
 table = dynamodb.Table('bank-bot-demo')
 log = logging.getLogger()
 log.setLevel(logging.DEBUG)

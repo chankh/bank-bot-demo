@@ -17,11 +17,15 @@ logging.getLogger().setLevel(logging.DEBUG)
 requests_log = logging.getLogger("requests.packages.urllib3")
 requests_log.setLevel(logging.DEBUG)
 requests_log.propagate = True
-dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+
+region = os.getenv('REGION')
+dynamodb = boto3.resource('dynamodb', region_name=region)
 table = dynamodb.Table('bank-bot-demo')
 
 client_id = os.getenv('CLIENT_ID')
 client_secret = os.getenv('CLIENT_SECRET')
+
+bank_token_url = os.getenv('BANK_TOKEN_URL')
 
 
 def lambda_handler(event, context):

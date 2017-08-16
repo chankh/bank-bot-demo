@@ -12,11 +12,11 @@ page_token = os.getenv('PAGE_TOKEN')
 
 bank_auth_url = os.getenv('BANK_AUTH_URL')
 
-lex = boto3.client('lex-runtime')
+lex = boto3.client('lex-runtime', region_name='us-east-1')
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
-lambda_tmp_dir = '/tmp' # Lambda fuction can use this directory.
+lambda_tmp_dir = '/tmp'  # Lambda fuction can use this directory.
 local_source_audio = "{0}/downloaded.mp4".format(lambda_tmp_dir)
 output_file = "{0}/output.wav".format(lambda_tmp_dir)
 

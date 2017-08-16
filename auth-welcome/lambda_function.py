@@ -5,7 +5,8 @@ import requests
 page_id = os.getenv('PAGE_ID')
 page_token = os.getenv('PAGE_TOKEN')
 
-dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+region = os.getenv('REGION')
+dynamodb = boto3.resource('dynamodb', region_name=region)
 table = dynamodb.Table('bank-bot-demo')
 
 
