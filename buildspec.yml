@@ -9,9 +9,15 @@ phases:
             - cd auth-welcome && pip install -r requirements.txt && zip -r ../auth-welcome.zip . && cd ..
             - cd bank-bot && pip install -r requirements.txt && zip -r ../bank-bot.zip . && cd ..
             - cd facebook-webhook && pip install -r requirements.txt && zip -r ../facebook-webhook.zip . && cd ..
+            - cd bank-backend && zip -r ../bank-backend.zip . && cd ..
     post_build:
         commands:
-            - aws s3 cp *.zip s3://khk-aws/demos/bank-bot-demo/
+            - aws s3 cp auth-redirect.zip s3://khk-aws/demos/bank-bot-demo/
+            - aws s3 cp auth-welcome.zip s3://khk-aws/demos/bank-bot-demo/
+            - aws s3 cp bank-bot.zip s3://khk-aws/demos/bank-bot-demo/
+            - aws s3 cp facebook-webhook.zip s3://khk-aws/demos/bank-bot-demo/
+            - aws s3 cp bank-backend.zip s3://khk-aws/demos/bank-bot-demo/
+
 artifacts:
     type: zip
     files:
@@ -19,3 +25,4 @@ artifacts:
         - auth-welcome.zip
         - bank-bot.zip
         - facebook-webhook.zip
+        - bank-backend.zip
