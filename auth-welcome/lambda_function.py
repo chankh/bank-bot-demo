@@ -6,7 +6,7 @@ page_id = os.getenv('PAGE_ID')
 page_token = os.getenv('PAGE_TOKEN')
 
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
-table = dynamodb.Table('citi-demo')
+table = dynamodb.Table('bank-bot-demo')
 
 
 def lambda_handler(event, context):

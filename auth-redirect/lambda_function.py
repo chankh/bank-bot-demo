@@ -18,7 +18,7 @@ requests_log = logging.getLogger("requests.packages.urllib3")
 requests_log.setLevel(logging.DEBUG)
 requests_log.propagate = True
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
-table = dynamodb.Table('citi-demo')
+table = dynamodb.Table('bank-bot-demo')
 
 client_id = os.getenv('CLIENT_ID')
 client_secret = os.getenv('CLIENT_SECRET')
@@ -50,7 +50,7 @@ def lambda_handler(event, context):
         resp['name'] = retrieve_customer_name(resp['access_token'])
         table.put_item(Item=resp)
     else:
-        print("Error retrieving access token from Citibank. %s" % r.text)
+        print("Error retrieving access token from bank. %s" % r.text)
 
     return 'Authentication success! You may close this window now.'
 

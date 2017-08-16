@@ -6,7 +6,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
-table = dynamodb.Table('citi-demo')
+table = dynamodb.Table('bank-bot-demo')
 
 
 def transfer_money(user_token, event, attributes):
@@ -14,8 +14,8 @@ def transfer_money(user_token, event, attributes):
     invocation = event['invocationSource']
     intent_name = intent['name']
     slots = intent['slots']
-    # let's fetch some account info from Citi
-    accounts = citi.retrieve_dest_src_acct(user_token)
+    # let's fetch some account info from bank
+    accounts = bank.retrieve_dest_src_acct(user_token)
 
     if invocation == 'DialogCodeHook':
         validation_result = validate_transfer(slots, attributes, accounts)
@@ -38,7 +38,7 @@ def transfer_money(user_token, event, attributes):
         if intent['confirmationStatus'] == 'None':
 
             """
-            control_flow_id = citi.create_transfer(
+            control_flow_id = bank.create_transfer(
                     user_token,
                     attributes['source_account_id'],
                     attributes['amount'],
@@ -68,7 +68,7 @@ def transfer_money(user_token, event, attributes):
         else:
             return delegate(attributes, slots)
 
-    # t = citi.make_transfer(user_token, attributes['control_flow_id'])
+    # t = bank.make_transfer(user_token, attributes['control_flow_id'])
     # Fulfillment, confirming the transfer
     ref_id = 'HBKFT738X6901667831'
     return close(
@@ -153,7 +153,7 @@ def show_accounts(user_token, intent, attributes):
                 }
         )
 
-    summary = citi.get_account_summary(user_token, account_group)
+    summary = bank.get_account_summary(user_token, account_group)
     if summary is None:
         resp = "You do not have any accounts of this type."
     else:
@@ -382,7 +382,7 @@ def dispatch(event):
 def lambda_handler(event, context):
     logger.debug(event)
     bot_name = event['bot']['name']
-    if bot_name == 'CitiDemo':
+    if bot_name == 'BankDemo':
         return dispatch(event)
 
     Exception('Invocation from unknown bot ' + bot_name)

@@ -10,7 +10,7 @@ import subprocess
 page_id = os.getenv('PAGE_ID')
 page_token = os.getenv('PAGE_TOKEN')
 
-citi_auth_url = os.getenv('CITI_AUTH_URL')
+bank_auth_url = os.getenv('BANK_AUTH_URL')
 
 lex = boto3.client('lex-runtime')
 logger = logging.getLogger()
@@ -45,7 +45,7 @@ def lambda_handler(event, context):
 
 
 def verify_webhook(query, context):
-    if query['hub.mode'] == 'subscribe' and query['hub.verify_token'] == 'citi-demo-facebook':
+    if query['hub.mode'] == 'subscribe':
         logger.info("Facebook webhook integration verified.")
         return int(query['hub.challenge'])
 
@@ -90,7 +90,7 @@ def received_message(msg):
     logger.debug("Received message for user %s and page %s at %d with message: %s" %
                  (sender_id, recipient_id, timestamp, msg))
 
-    access_token = citi.check_auth(sender_id)
+    access_token = bank.check_auth(sender_id)
     if access_token is not None:
         if 'attachments' in msg['message']:
             msg_attachments = msg['message']['attachments']
@@ -112,7 +112,7 @@ def received_message(msg):
 def ask_lex_content(recipient_id, content):
     with open(content, 'rb') as file:
         resp = lex.post_content(
-            botName='CitiDemo',
+            botName='BankDemo',
             botAlias='Demo',
             userId=recipient_id,
             contentType='audio/l16; rate=16000; channels=1',
@@ -126,7 +126,7 @@ def ask_lex_content(recipient_id, content):
 def ask_lex(recipient_id, message):
     try:
         resp = lex.post_text(
-                botName='CitiDemo',
+                botName='BankDemo',
                 botAlias='Demo',
                 userId=recipient_id,
                 sessionAttributes={},
@@ -167,10 +167,10 @@ def ask_auth(user_id):
                     "type": "template",
                     "payload": {
                         "template_type": "button",
-                        "text": "Please authorize with Citibank to proceed",
+                        "text": "Please authorize with bank to proceed",
                         "buttons": [{
                             "type": "web_url",
-                            "url": citi_auth_url + user_id,
+                            "url": bank_auth_url + user_id,
                             "title": "Authorize"
                             }]
                     }
