@@ -1,8 +1,8 @@
-version: 0.1
+version: 0.2
 phases:
-    pre_build:
+    install:
         commands:
-            - apt-get install zip
+            - sudo apt-get install -y zip
     build:
         commands:
             - cd auth-redirect && pip install -r requirements.txt && zip -r ../auth-redirect.zip . && cd ..
