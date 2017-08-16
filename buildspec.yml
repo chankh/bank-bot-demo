@@ -1,0 +1,15 @@
+version: 0.1
+phases:
+    build:
+        commands:
+            - cd auth-welcome
+            - pip install -r requirements.txt
+            - zip -r ../auth-welcome.zip .
+            - cd ..
+    post-build:
+        commands:
+            - aws s3 cp auth-welcome.zip s3://khk-aws/demos/bank-bot-demo/
+artifacts:
+    type: zip
+    files:
+        - auth-welcome.zip
