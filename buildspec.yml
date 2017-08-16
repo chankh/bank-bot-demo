@@ -2,7 +2,7 @@ version: 0.2
 phases:
     install:
         commands:
-            - sudo apt-get install -y zip
+            - sudo apt-get update && sudo apt-get install -y zip
     build:
         commands:
             - cd auth-redirect && pip install -r requirements.txt && zip -r ../auth-redirect.zip . && cd ..
