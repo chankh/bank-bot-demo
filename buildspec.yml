@@ -26,3 +26,4 @@ artifacts:
         - bank-bot.zip
         - facebook-webhook.zip
         - bank-backend.zip
+        - cfn.yaml
