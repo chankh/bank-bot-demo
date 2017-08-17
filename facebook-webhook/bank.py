@@ -3,7 +3,7 @@ import logging
 import os
 import time
 
-region = os.geten('REGION')
+region = os.getenv('REGION')
 dynamodb = boto3.resource('dynamodb', region_name=region)
 table = dynamodb.Table('bank-bot-demo')
 log = logging.getLogger()
