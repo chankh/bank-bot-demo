@@ -7,6 +7,9 @@ Parameters:
   ParamFacebookPageToken:
     Type: String
     Description: Facebook Page Token
+  ParamLexBotArn:
+    Type: String
+    Description: ARN for Lex Bot
 Resources:
   DDBTable:
     Type: 'AWS::DynamoDB::Table'
@@ -68,7 +71,7 @@ Resources:
                   - 'lex:PostContent'
                   - 'lex:PostText'
                 Resource:
-                  - 'arn:aws:lex:us-east-1:831212071815:bot:CitiDemo:Demo'
+                  - !Ref ParamLexBotArn
       RoleName: bank-bot-demo-service-role
     DependsOn:
       - DDBTable
@@ -93,6 +96,16 @@ Resources:
           - 'Arn'
       Runtime: 'python3.6'
       Timeout: '10'
+  LambdaAuthRedirectPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      FunctionName:
+        Fn::GetAtt:
+          - 'LambdaAuthRedirect'
+          - 'Arn'
+      Principal: 'apigateway.amazonaws.com'
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${BankBotDemoApi}/*
   LambdaAuthWelcome:
     Type: 'AWS::Lambda::Function'
     Properties:
@@ -149,6 +162,16 @@ Resources:
           - 'Arn'
       Runtime: 'python3.6'
       Timeout: '10'
+  LambdaBankBotPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      FunctionName:
+        Fn::GetAtt:
+          - 'LambdaBankBot'
+          - 'Arn'
+      Principal: 'lex.amazonaws.com'
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${BankBotDemoApi}/*
   LambdaFacebookWebhook:
     Type: 'AWS::Lambda::Function'
     Properties:
@@ -172,6 +195,16 @@ Resources:
           - 'Arn'
       Runtime: 'python3.6'
       Timeout: '10'
+  LambdaFacebookWebhookPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      FunctionName:
+        Fn::GetAtt:
+          - 'LambdaFacebookWebhook'
+          - 'Arn'
+      Principal: 'apigateway.amazonaws.com'
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${BankBotDemoApi}/*
   BankBotDemoApi:
     Type: 'AWS::ApiGateway::RestApi'
     Properties:
@@ -185,6 +218,12 @@ Resources:
     Properties:
       DeploymentId:
         Ref: ApiDeployment
+      MethodSettings:
+        - DataTraceEnabled: true
+          HttpMethod: '*'
+          LoggingLevel: 'INFO'
+          MetricsEnabled: true
+          ResourcePath: '/*'
       RestApiId:
         Ref: BankBotDemoApi
       StageName: 'v1'
@@ -218,6 +257,7 @@ Resources:
           - RootResourceId
       PathPart: 'redirect'
   ApiFacebookWebhookGetRequest:
+    DependsOn: 'LambdaFacebookWebhookPermission'
     Type: 'AWS::ApiGateway::Method'
     Properties:
       RestApiId:
@@ -228,7 +268,11 @@ Resources:
       AuthorizationType: 'NONE'
       Integration:
         Type: 'AWS'
-        IntegrationHttpMethod: 'GET'
+        IntegrationHttpMethod: 'POST'
+        IntegrationResponses:
+          - ResponseTemplates:
+              application/json: ''
+            StatusCode: '200'
         Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFacebookWebhook.Arn}/invocations
         PassthroughBehavior: 'WHEN_NO_TEMPLATES'
         RequestTemplates:
@@ -252,7 +296,12 @@ Resources:
                 - '  #end'
                 - '  }'
                 - '}'
+      MethodResponses:
+        - ResponseModels:
+            application/json: Empty
+          StatusCode: '200'
   ApiFacebookWebhookPostRequest:
+    DependsOn: 'LambdaFacebookWebhookPermission'
     Type: 'AWS::ApiGateway::Method'
     Properties:
       RestApiId:
@@ -264,6 +313,10 @@ Resources:
       Integration:
         Type: 'AWS'
         IntegrationHttpMethod: 'POST'
+        IntegrationResponses:
+          - ResponseTemplates:
+              application/json: ''
+            StatusCode: '200'
         Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFacebookWebhook.Arn}/invocations
         PassthroughBehavior: 'WHEN_NO_TEMPLATES'
         RequestTemplates:
@@ -287,7 +340,12 @@ Resources:
                 - '  #end'
                 - '  }'
                 - '}'
+      MethodResponses:
+        - ResponseModels:
+            application/json: Empty
+          StatusCode: '200'
   ApiRedirectGetRequest:
+    DependsOn: 'LambdaAuthRedirectPermission'
     Type: 'AWS::ApiGateway::Method'
     Properties:
       RestApiId:
@@ -298,7 +356,11 @@ Resources:
       AuthorizationType: 'NONE'
       Integration:
         Type: 'AWS'
-        IntegrationHttpMethod: 'GET'
+        IntegrationHttpMethod: 'POST'
+        IntegrationResponses:
+          - ResponseTemplates:
+              text/plain: '$input.path(''$'')'
+            StatusCode: '200'
         Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaAuthRedirect.Arn}/invocations
         PassthroughBehavior: 'WHEN_NO_TEMPLATES'
         RequestTemplates:
@@ -322,4 +384,8 @@ Resources:
                 - '  #end'
                 - '  }'
                 - '}'
+      MethodResponses:
+        - ResponseModels:
+            text/plain: Empty
+          StatusCode: '200'
 
