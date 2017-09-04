@@ -1,1 +1,1 @@
-make: ./build.sh
+make: sh ./build.sh
