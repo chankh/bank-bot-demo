@@ -87,7 +87,7 @@ Resources:
           REGION: !Sub ${AWS::Region}
           CLIENT_ID: '000000'
           CLIENT_SECRET: '999999'
-          BANK_TOKEN_URL: 'http://localhost'
+          BANK_TOKEN_URL: !Sub 'https://${BankBackendEnv.EndpointURL}/token'
       FunctionName: 'bank-demo-auth-redirect'
       Handler: 'lambda_function.lambda_handler'
       Role:
@@ -186,7 +186,8 @@ Resources:
             Ref: ParamFacebookPageId
           PAGE_TOKEN:
             Ref: ParamFacebookPageToken
-          BANK_AUTH_URL: 'http://localhost'
+          BANK_AUTH_URL: !Sub 'https://${BankBackendEnv.EndpointURL}/authorize'
+          REDIRECT_URL: !Sub 'https://${BankBotDemoApi}.execute-api.${AWS::Region}.amazonaws.com/v1/redirect'
       FunctionName: 'bank-demo-facebook-webhook'
       Handler: 'lambda_function.lambda_handler'
       Role:
@@ -294,6 +295,9 @@ Resources:
                 - '    }'
                 - '    #if($foreach.hasNext),#end'
                 - '  #end'
+                - '  },'
+                - '  "context": {'
+                - '    "http-method": "$context.httpMethod"'
                 - '  }'
                 - '}'
       MethodResponses:
@@ -338,6 +342,9 @@ Resources:
                 - '    }'
                 - '    #if($foreach.hasNext),#end'
                 - '  #end'
+                - '  },'
+                - '  "context": {'
+                - '    "http-method": "$context.httpMethod"'
                 - '  }'
                 - '}'
       MethodResponses:
@@ -382,10 +389,56 @@ Resources:
                 - '    }'
                 - '    #if($foreach.hasNext),#end'
                 - '  #end'
+                - '  },'
+                - '  "context": {'
+                - '    "http-method": "$context.httpMethod"'
                 - '  }'
                 - '}'
       MethodResponses:
         - ResponseModels:
             text/plain: Empty
           StatusCode: '200'
-
+  BankBackendApp:
+    Type: 'AWS::ElasticBeanstalk::Application'
+    Properties:
+      ApplicationName: BankBackend
+      Description: 'Dummy application that act as the Bank''s backend API.'
+  BankBackendAppVer:
+    Type: 'AWS::ElasticBeanstalk::ApplicationVersion'
+    Properties:
+      ApplicationName: !Ref BankBackendApp
+      Description: 'Bank application version'
+      SourceBundle:
+        S3Bucket: 'khk-aws'
+        S3Key: 'demos/bank-bot-demo/bank-backend.zip'
+  BankBackendTemplate:
+    Type: 'AWS::ElasticBeanstalk::ConfigurationTemplate'
+    Properties:
+      ApplicationName: !Ref BankBackendApp
+      Description: 'Bank application configuration template'
+      OptionSettings:
+        - Namespace: 'aws:elasticbeanstalk:application:environment'
+          OptionName: 'ENV'
+          Value: 'PROD'
+        - Namespace: 'aws:elasticbeanstalk:application:environment'
+          OptionName: 'REDIRECT_URI'
+          Value: !Sub 'https://${BankBotDemoApi}.execute-api.${AWS::Region}.amazonaws.com/v1/redirect'
+        - Namespace: 'aws:elasticbeanstalk:environment'
+          OptionName: 'EnvironmentType'
+          Value: 'SingleInstance'
+        - Namespace: 'aws:autoscaling:launchconfiguration'
+          OptionName: 'InstanceType'
+          Value: t2.micro
+      SolutionStackName: '64bit Amazon Linux 2017.03 v2.6.0 running Go 1.8'
+  BankBackendEnv:
+    Type: 'AWS::ElasticBeanstalk::Environment'
+    Properties:
+      ApplicationName: !Ref BankBackendApp
+      Description: 'Bank environment'
+      EnvironmentName: 'bank-api'
+      TemplateName: !Ref BankBackendTemplate
+      VersionLabel: !Ref BankBackendAppVer
+Outputs:
+  FacebookIntegrationUrl:
+    Description: The URL for Facebook Messenger integration
+    Value: !Sub 'https://${BankBotDemoApi}.execute-api.${AWS::Region}.amazonaws.com/v1/facebook-webhook'
