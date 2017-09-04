@@ -10,7 +10,8 @@ import subprocess
 page_id = os.getenv('PAGE_ID')
 page_token = os.getenv('PAGE_TOKEN')
 
-bank_auth_url = os.getenv('BANK_AUTH_URL')
+redirect_url = os.getenv('REDIRECT_URL')
+bank_auth_url = os.getenv('BANK_AUTH_URL') + "?response_type=code&client_id=d738097c-6eea-4e5b-a1f2-35d816a65f07&scope=accounts_details_transactions%20customers_profiles%20payees%20personal_domestic_transfers%20internal_domestic_transfers%20external_domestic_transfers%20bill_payments&countryCode=HK&businessCode=GCB&locale=en_HK&redirect_uri=" + redirect_url + "&state="
 
 lex = boto3.client('lex-runtime', region_name='us-east-1')
 logger = logging.getLogger()
@@ -177,5 +178,6 @@ def ask_auth(user_id):
                 }
             }
         }
+    logger.debug(message_data)
 
     call_message_api(message_data)
