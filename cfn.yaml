@@ -87,7 +87,8 @@ Resources:
           REGION: !Sub ${AWS::Region}
           CLIENT_ID: '000000'
           CLIENT_SECRET: '999999'
-          BANK_TOKEN_URL: !Sub 'http://${BankBackendEnv.EndpointURL}/token'
+          BANK_BASE_URI: !Sub 'http://${BankBackendEnv.EndpointURL}'
+          REDIRECT_URI: !Sub 'https://${BankBotDemoApi}.execute-api.${AWS::Region}.amazonaws.com/v1/redirect'
       FunctionName: 'bank-demo-auth-redirect'
       Handler: 'lambda_function.lambda_handler'
       Role:
