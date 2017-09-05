@@ -87,7 +87,7 @@ Resources:
           REGION: !Sub ${AWS::Region}
           CLIENT_ID: '000000'
           CLIENT_SECRET: '999999'
-          BANK_TOKEN_URL: !Sub 'https://${BankBackendEnv.EndpointURL}/token'
+          BANK_TOKEN_URL: !Sub 'http://${BankBackendEnv.EndpointURL}/token'
       FunctionName: 'bank-demo-auth-redirect'
       Handler: 'lambda_function.lambda_handler'
       Role:
@@ -186,7 +186,7 @@ Resources:
             Ref: ParamFacebookPageId
           PAGE_TOKEN:
             Ref: ParamFacebookPageToken
-          BANK_AUTH_URL: !Sub 'https://${BankBackendEnv.EndpointURL}/authorize'
+          BANK_AUTH_URL: !Sub 'http://${BankBackendEnv.EndpointURL}/authorize'
           REDIRECT_URL: !Sub 'https://${BankBotDemoApi}.execute-api.${AWS::Region}.amazonaws.com/v1/redirect'
       FunctionName: 'bank-demo-facebook-webhook'
       Handler: 'lambda_function.lambda_handler'
@@ -425,7 +425,7 @@ Resources:
           Value: !Sub 'https://${BankBotDemoApi}.execute-api.${AWS::Region}.amazonaws.com/v1/redirect'
         - Namespace: 'aws:elasticbeanstalk:environment'
           OptionName: 'EnvironmentType'
-          Value: 'SingleInstance'
+          Value: 'LoadBalanced'
         - Namespace: 'aws:autoscaling:launchconfiguration'
           OptionName: 'InstanceType'
           Value: t2.micro
