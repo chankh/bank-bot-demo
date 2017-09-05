@@ -12,11 +12,11 @@ phases:
             - cd bank-backend && zip -r ../bank-backend.zip . && cd ..
     post_build:
         commands:
-            - aws s3 cp auth-redirect.zip s3://khk-aws/demos/bank-bot-demo/
-            - aws s3 cp auth-welcome.zip s3://khk-aws/demos/bank-bot-demo/
-            - aws s3 cp bank-bot.zip s3://khk-aws/demos/bank-bot-demo/
-            - aws s3 cp facebook-webhook.zip s3://khk-aws/demos/bank-bot-demo/
-            - aws s3 cp bank-backend.zip s3://khk-aws/demos/bank-bot-demo/
+            - aws s3 cp auth-redirect.zip s3://khk-us-east-1/demos/bank-bot-demo/
+            - aws s3 cp auth-welcome.zip s3://khk-us-east-1/demos/bank-bot-demo/
+            - aws s3 cp bank-bot.zip s3://khk-us-east-1/demos/bank-bot-demo/
+            - aws s3 cp facebook-webhook.zip s3://khk-us-east-1/demos/bank-bot-demo/
+            - aws s3 cp bank-backend.zip s3://khk-us-east-1/demos/bank-bot-demo/
 
 artifacts:
     type: zip
