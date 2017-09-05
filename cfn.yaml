@@ -7,9 +7,12 @@ Parameters:
   ParamFacebookPageToken:
     Type: String
     Description: Facebook Page Token
-  ParamLexBotArn:
+  ParamLexBotName:
     Type: String
-    Description: ARN for Lex Bot
+    Description: Name of Lex Bot for this demo
+  ParamLexBotAlias:
+    Type: String
+    Description: Alias of Lex Bot for this demo
 Resources:
   DDBTable:
     Type: 'AWS::DynamoDB::Table'
@@ -71,7 +74,7 @@ Resources:
                   - 'lex:PostContent'
                   - 'lex:PostText'
                 Resource:
-                  - !Ref ParamLexBotArn
+                  - 'arn:aws:lex:*:*:bot:*:*'
       RoleName: bank-bot-demo-service-role
     DependsOn:
       - DDBTable

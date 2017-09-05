@@ -13,6 +13,8 @@ page_token = os.getenv('PAGE_TOKEN')
 redirect_url = os.getenv('REDIRECT_URL')
 bank_auth_url = os.getenv('BANK_AUTH_URL') + "?response_type=code&client_id=000000&scope=accounts_details_transactions%20customers_profiles%20payees%20personal_domestic_transfers%20internal_domestic_transfers%20external_domestic_transfers%20bill_payments&countryCode=HK&businessCode=GCB&locale=en_HK&redirect_uri=" + redirect_url + "&state="
 
+bot_name = os.getenv('BOT_NAME')
+bot_alias = os.getenv('BOT_ALIAS')
 lex = boto3.client('lex-runtime', region_name='us-east-1')
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -127,8 +129,8 @@ def ask_lex_content(recipient_id, content):
 def ask_lex(recipient_id, message):
     try:
         resp = lex.post_text(
-                botName='BankDemo',
-                botAlias='Demo',
+                botName=bot_name,
+                botAlias=bot_alias,
                 userId=recipient_id,
                 sessionAttributes={},
                 inputText=message)
