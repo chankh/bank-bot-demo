@@ -158,6 +158,8 @@ Resources:
       Environment:
         Variables:
           REGION: !Sub ${AWS::Region}
+          BANK_BASE_URI: !Sub 'http://${BankBackendEnv.EndpointURL}'
+          BOT_NAME: !Ref ParamLexBotName
       FunctionName: 'bank-demo-bot'
       Handler: 'lambda_function.lambda_handler'
       Role:
@@ -192,6 +194,8 @@ Resources:
             Ref: ParamFacebookPageToken
           BANK_AUTH_URL: !Sub 'http://${BankBackendEnv.EndpointURL}/authorize'
           REDIRECT_URL: !Sub 'https://${BankBotDemoApi}.execute-api.${AWS::Region}.amazonaws.com/v1/redirect'
+          BOT_NAME: !Ref ParamLexBotName
+          BOT_ALIAS: !Ref ParamLexBotAlias
       FunctionName: 'bank-demo-facebook-webhook'
       Handler: 'lambda_function.lambda_handler'
       Role:

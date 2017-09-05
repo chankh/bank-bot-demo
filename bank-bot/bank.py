@@ -14,6 +14,7 @@ http_client.HTTPConnection.debuglevel = 1
 
 client_id = os.getenv('CLIENT_ID')
 client_secret = os.getenv('CLIENT_SECRET')
+bank_base_uri = os.getenv('BANK_BASE_URI')
 
 logging.basicConfig()
 logger = logging.getLogger()
@@ -25,7 +26,7 @@ requests_log.propagate = True
 
 def get_account_summary(token, group):
     headers = generate_headers(token)
-    r = requests.get("https://sandbox.apihub.citi.com/gcb/api/v1/accounts",
+    r = requests.get(bank_base_uri + "/accounts",
                      headers=headers)
 
     if r.status_code != 200:
@@ -41,9 +42,8 @@ def get_account_summary(token, group):
 
 def retrieve_dest_src_acct(token):
     headers = generate_headers(token)
-    r = requests.get(
-            "https://sandbox.apihub.citi.com/gcb/api/v1/moneyMovement/personalDomesticTransfers/destinationAccounts/sourceAccounts",
-            headers=headers)
+    r = requests.get(bank_base_uri + "/transfer",
+                     headers=headers)
 
     if r.status_code != 200:
         logger.error("Unable to get account summary, status={}, error={}".format(r.status_code, r.text))

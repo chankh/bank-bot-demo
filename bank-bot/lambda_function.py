@@ -6,6 +6,7 @@ import logging
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
+bot_name = os.getenv('BOT_NAME')
 region = os.getenv('REGION')
 dynamodb = boto3.resource('dynamodb', region_name=region)
 table = dynamodb.Table('bank-bot-demo')
@@ -383,8 +384,8 @@ def dispatch(event):
 
 def lambda_handler(event, context):
     logger.debug(event)
-    bot_name = event['bot']['name']
-    if bot_name == 'BankDemo':
+    name = event['bot']['name']
+    if name == bot_name:
         return dispatch(event)
 
-    Exception('Invocation from unknown bot ' + bot_name)
+    Exception('Invocation from unknown bot ' + name)
