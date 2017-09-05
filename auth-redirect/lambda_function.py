@@ -25,7 +25,8 @@ table = dynamodb.Table('bank-bot-demo')
 client_id = os.getenv('CLIENT_ID')
 client_secret = os.getenv('CLIENT_SECRET')
 
-bank_token_url = os.getenv('BANK_TOKEN_URL')
+redirect_uri = os.getenv('REDIRECT_URI')
+bank_base_uri = os.getenv('BANK_BASE_URI')
 
 
 def lambda_handler(event, context):
@@ -35,11 +36,11 @@ def lambda_handler(event, context):
 
     data = {"code": code,
             "grant_type": "authorization_code",
-            "redirect_uri": "https://npkpenmw49.execute-api.us-east-1.amazonaws.com/v1/redirect"}
+            "redirect_uri": redirect_uri}
     auth = HTTPBasicAuth(client_id, client_secret)
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     r = requests.post(
-            'https://sandbox.apihub.citi.com/gcb/api/authCode/oauth2/token/hk/gcb',
+            bank_base_uri + "/token",
             data=data,
             auth=auth,
             headers=headers)
@@ -66,13 +67,13 @@ def retrieve_customer_name(access_token):
         'Accept': 'application/json',
         'client_id': client_id
     }
-    r = requests.get('https://sandbox.apihub.citi.com/gcb/api/v1/customers/profiles/basic',
+    r = requests.get(bank_base_uri + '/profiles',
                      headers=headers)
 
     if r.status_code != 200:
         return None
 
-    info = r.json()['customerParticulars']
-    name = info['names'][0]
+    info = r.json()
+    name = info['name']
     name['prefix'] = info['prefix']
     return name
