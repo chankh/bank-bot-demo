@@ -38,7 +38,7 @@ func main() {
 
 	env := os.Getenv("ENV")
 	if env == "PROD" {
-		f, _ := os.Create("/var/log/golang/golang-server.log")
+		f, _ := os.OpenFile("/var/log/golang-server.log", os.O_WRONLY|os.O_CREATE, 0644)
 		defer f.Close()
 		log.SetOutput(f)
 	} else {
