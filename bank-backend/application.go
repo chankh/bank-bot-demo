@@ -90,6 +90,7 @@ func main() {
 
 	http.HandleFunc("/accounts", accountsHandler)
 	http.HandleFunc("/transfer", transferHandler)
+	http.HandleFunc("/profiles", profilesHandler)
 
 	log.Infof("Listening on port %s", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
