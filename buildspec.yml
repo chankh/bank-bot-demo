@@ -17,6 +17,7 @@ phases:
             - aws s3 cp bank-bot.zip s3://khk-us-east-1/demos/bank-bot-demo/
             - aws s3 cp facebook-webhook.zip s3://khk-us-east-1/demos/bank-bot-demo/
             - aws s3 cp bank-backend.zip s3://khk-us-east-1/demos/bank-bot-demo/
+            - aws s3 cp cfn.yaml s3://khk-us-east-1/demos/bank-bot-demo/
 
 artifacts:
     type: zip
