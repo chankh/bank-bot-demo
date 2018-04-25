@@ -115,8 +115,8 @@ def received_message(msg):
 def ask_lex_content(recipient_id, content):
     with open(content, 'rb') as file:
         resp = lex.post_content(
-            botName='BankDemo',
-            botAlias='Demo',
+            botName=bot_name,
+            botAlias=bot_alias,
             userId=recipient_id,
             contentType='audio/l16; rate=16000; channels=1',
             accept='audio/mpeg',
